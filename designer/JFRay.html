@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JF Ray | VisionQuest</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+      /* Hero 섹션 */
+      .hero {
+        height: 70vh;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        color: white;
+        margin-bottom: 40px;
+        transition: background-image 0.5s ease-in-out;
+      }
+
+      .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+        backdrop-filter: blur(5px);
+      }
+
+      .hero h1 {
+        font-size: 64px;
+        font-weight: bold;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        z-index: 2;
+        position: relative;
+      }
+
+      section {
+        padding: 50px 20px;
+        max-width: 900px;
+        margin: 0 auto;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .ranking-list {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .ranking-item {
+        margin: 15px 0; /* 항목 사이 여백 */
+        background-color: #f3f4f6; /* 배경색 추가 */
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+        text-align: left; /* 항목 내용을 왼쪽 정렬 */
+      }
+
+      .ranking-item a {
+        text-decoration: none; /* 밑줄 제거 */
+        color: inherit; /* 부모 색상 유지 */
+        display: block; /* 클릭 영역 확장 */
+        padding: 15px; /* 내부 패딩 추가 */
+        font-size: 18px; /* 글자 크기 조정 */
+        line-height: 1.6; /* 줄 간격 조정 */
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .ranking-item a:hover {
+        background-color: #e0e7ff; /* 호버 시 배경색 변경 */
+        color: #4f46e5; /* 호버 시 텍스트 색상 변경 */
+      }
+
+      /* 유튜브 카드 레이아웃 */
+      .video-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .video-item {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        cursor: pointer;
+      }
+
+      .video-item:hover {
+        transform: scale(1.05);
+      }
+
+      .video-item img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+      }
+
+      .video-content {
+        padding: 15px;
+        text-align: left;
+      }
+
+      .video-content h3 {
+        font-size: 18px;
+        margin: 0;
+        color: #333;
+      }
+
+      /* 뒤로가기 버튼 */
+      .back-button {
+        margin-right: 15px;
+        padding: 8px 16px;
+        background: linear-gradient(45deg, #4f46e5, #6366f1);
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: background 0.3s, box-shadow 0.3s;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.5);
+      }
+
+      .back-button:hover {
+        background: linear-gradient(45deg, #3730a3, #6366f1);
+        box-shadow: 0 6px 16px rgba(79, 70, 229, 0.7);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <a class="back-button" href="../index.html">뒤로가기</a>
+        <div class="logo">서희 연구소</div>
+        <nav class="navbar">
+          <ul class="nav-links">
+            <li><a href="#about">브랜드 소개</a></li>
+            <li><a href="#ranking">검색 순위</a></li>
+            <li><a href="#videos">YouTube 동영상</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <main class="content">
+        <section class="hero" id="hero">
+          <div class="hero-content">
+            <h1>JF Ray</h1>
+          </div>
+        </section>
+
+        <section id="about">
+          <h2>브랜드 소개</h2>
+          <br />
+          <p>
+            프랑스의 고급 안경 브랜드로, 독창적이고 예술적인 디자인으로 유명합니다.
+          </p>
+        </section>
+
+        <section id="ranking">
+          <h2>블로그 검색 순위</h2>
+          <br />
+          <div>
+            <h3>JF Ray 안경테</h3>
+            <ul class="ranking-list" id="glasses-list"></ul>
+          </div>
+          <br />
+          <div>
+            <h3>JF Ray 선글라스</h3>
+            <ul class="ranking-list" id="sunglasses-list"></ul>
+          </div>
+        </section>
+
+        <section id="videos">
+          <h2>YouTube 동영상</h2>
+          <br />
+          <div class="video-list" id="video-list"></div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>Seohee Research Institute v1.2 2024.10</p>
+      </footer>
+    </div>
+
+    <script>
+      const PIXABAY_API_KEY = '44602145-d50518e28e346f2e8ecfc4324';
+      const KAKAO_API_KEY = 'e4bc7963ad8281aa1b3dfd5e80e0e3d4';
+      const YOUTUBE_API_KEY = 'AIzaSyAej0mN1hLve-IiSXBXzQOGzgcpkDkYgic';
+
+      // 캐시 데이터를 저장할 객체 선언
+      let cachedData = {
+        glasses: null,
+        sunglasses: null,
+        youtube: null,
+      };
+
+      // Pixabay API로 배경 이미지 설정
+      async function setHeroBackground() {
+        try {
+          const response = await fetch(
+            `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=제이에프레이&image_type=photo`
+          );
+          const data = await response.json();
+          if (data.hits.length > 0) {
+            const imageUrl = data.hits[0].largeImageURL;
+            document.getElementById('hero').style.backgroundImage = `url(${imageUrl})`;
+          }
+        } catch (error) {
+          console.error('Pixabay API 호출 오류:', error);
+        }
+      }
+
+      // Kakao API를 사용하여 검색 순위 가져오기
+      async function fetchSearchRanking(query, elementId, cacheKey) {
+        // 캐시된 데이터가 있으면 바로 사용
+        if (cachedData[cacheKey]) {
+          renderRanking(cachedData[cacheKey], document.getElementById(elementId));
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `https://dapi.kakao.com/v2/search/blog?query=${encodeURIComponent(query)}`,
+            {
+              headers: { Authorization: `KakaoAK ${KAKAO_API_KEY}` },
+            }
+          );
+          const data = await response.json();
+          cachedData[cacheKey] = data.documents; // API 호출 후 캐시에 저장
+          renderRanking(data.documents, document.getElementById(elementId));
+        } catch (error) {
+          console.error('Kakao API 호출 오류:', error);
+        }
+      }
+
+      // 검색 결과를 화면에 표시하는 함수
+      function renderRanking(items, element) {
+        element.innerHTML = items
+          .map(
+            (item, index) => `
+              <li class="ranking-item">
+                  <a href="${item.url}" target="_blank" rel="noopener noreferrer">
+                      ${index + 1}. ${item.title.replace(/<[^>]*>?/gm, '')}
+                  </a>
+              </li>
+          `
+          )
+          .join('');
+      }
+
+      // YouTube API를 사용하여 동영상 목록 가져오기
+      async function fetchYouTubeVideos(query) {
+        // 캐시된 데이터가 있으면 바로 사용
+        if (cachedData.youtube) {
+          renderVideos(cachedData.youtube);
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}&maxResults=10&type=video`
+          );
+          const data = await response.json();
+          cachedData.youtube = data.items; // API 호출 후 캐시에 저장
+          renderVideos(data.items);
+        } catch (error) {
+          console.error('YouTube API 호출 오류:', error);
+        }
+      }
+
+      // 동영상을 화면에 표시하는 함수
+      function renderVideos(items) {
+        document.getElementById('video-list').innerHTML = items
+          .map(
+            (item) => `
+              <div class="video-item">
+                <a href="https://www.youtube.com/watch?v=${item.id.videoId}" target="_blank" rel="noopener noreferrer">
+                  <img src="${item.snippet.thumbnails.high.url}" alt="${item.snippet.title}">
+                  <div class="video-content">
+                    <h3>${item.snippet.title}</h3>
+                  </div>
+                </a>
+              </div>
+            `
+          )
+          .join('');
+      }
+
+      // 배경 설정 및 API 호출 함수 실행
+      setHeroBackground();
+      fetchSearchRanking('JF Ray 안경테', 'glasses-list', 'glasses');
+      fetchSearchRanking('JF Ray 선글라스', 'sunglasses-list', 'sunglasses');
+      fetchYouTubeVideos('JF Ray' );
+    </script>
+  </body>
+</html>
