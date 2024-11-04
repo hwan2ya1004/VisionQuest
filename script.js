@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const hamburger = document.querySelector('.hamburger');
   const navbar = document.querySelector('.navbar');
   const navLinks = document.querySelectorAll('.navbar a');
-  const contentArea = document.querySelector('main.content'); // 메인 콘텐츠 영역
-
+  const contentArea = document.querySelector('main.content');
+  
   const oneDayInMillis = 24 * 60 * 60 * 1000; // 24시간
   const usedImageUrls = new Set(); // 이미 사용된 이미지 URL을 추적하기 위한 집합
 
@@ -512,7 +512,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const lastFetchTime = localStorage.getItem(`${brand.id}-fetchTime`);
       const currentTime = new Date().getTime();
 
-      // 만약 저장된 시간이 24시간 이내라면 로컬에서 이미지 가져옴
       if (lastFetchTime && currentTime - lastFetchTime < oneDayInMillis) {
         const storedImage = localStorage.getItem(`${brand.id}-image`);
         if (storedImage) {
@@ -524,13 +523,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // 저장된 이미지가 없거나, 24시간이 경과했을 때 새로운 이미지 가져옴
       const imageUrl = await fetchBrandImage(brand.searchTerm);
       if (imageUrl) {
-        localStorage.setItem(`${brand.id}-image`, imageUrl); // 이미지 저장
-        localStorage.setItem(`${brand.id}-fetchTime`, currentTime.toString()); // 시간 저장
+        localStorage.setItem(`${brand.id}-image`, imageUrl);
+        localStorage.setItem(`${brand.id}-fetchTime`, currentTime.toString());
 
-        // 이미지 요소 설정
         const brandElement = document.querySelector(`#${brand.id} .brand-image`);
         if (brandElement) {
           brandElement.src = imageUrl;
@@ -565,11 +562,11 @@ document.addEventListener('DOMContentLoaded', () => {
           return imageUrl;
         }
       } else {
-        return 'default-image.jpg'; // 기본 이미지 사용
+        return 'default-image.jpg';
       }
     } catch (error) {
       console.error('Pixabay API Error:', error);
-      return 'default-image.jpg'; // 에러 시 기본 이미지
+      return 'default-image.jpg';
     }
   }
 
