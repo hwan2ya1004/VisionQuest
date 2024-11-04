@@ -1,16 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const productModal = document.getElementById('product-modal')
-  const closeButton = document.querySelector('.close-button')
-  const hamburger = document.querySelector('.hamburger')
-  const navbar = document.querySelector('.navbar')
-  const navLinks = document.querySelectorAll('.navbar a')
-  const contentArea = document.querySelector('main.content') // 메인 콘텐츠 영역
+  const productModal = document.getElementById('product-modal');
+  const closeButton = document.querySelector('.close-button');
+  const hamburger = document.querySelector('.hamburger');
+  const navbar = document.querySelector('.navbar');
+  const navLinks = document.querySelectorAll('.navbar a');
+  const contentArea = document.querySelector('main.content'); // 메인 콘텐츠 영역
 
-  // Pixabay API key
-  const apiKey = '44602145-d50518e28e346f2e8ecfc4324'
-
-  // 이미 사용된 이미지 URL을 추적하기 위한 집합
-  const usedImageUrls = new Set()
+  const oneDayInMillis = 24 * 60 * 60 * 1000; // 24시간
+  const usedImageUrls = new Set(); // 이미 사용된 이미지 URL을 추적하기 위한 집합
 
   // Brands and search terms for fetching images
   const brands = [
@@ -509,38 +506,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ]
 
-  const oneDayInMillis = 24 * 60 * 60 * 1000 // 24시간
-
   // 로컬 스토리지에서 이미지와 시간 확인
   async function loadBrandImages() {
     for (const brand of brands) {
-      const lastFetchTime = localStorage.getItem(`${brand.id}-fetchTime`)
-      const currentTime = new Date().getTime()
+      const lastFetchTime = localStorage.getItem(`${brand.id}-fetchTime`);
+      const currentTime = new Date().getTime();
 
       // 만약 저장된 시간이 24시간 이내라면 로컬에서 이미지 가져옴
       if (lastFetchTime && currentTime - lastFetchTime < oneDayInMillis) {
-        const storedImage = localStorage.getItem(`${brand.id}-image`)
+        const storedImage = localStorage.getItem(`${brand.id}-image`);
         if (storedImage) {
-          const brandElement = document.querySelector(
-            `#${brand.id} .brand-image`
-          )
+          const brandElement = document.querySelector(`#${brand.id} .brand-image`);
           if (brandElement) {
-            brandElement.src = storedImage
+            brandElement.src = storedImage;
           }
-          continue
+          continue;
         }
       }
 
       // 저장된 이미지가 없거나, 24시간이 경과했을 때 새로운 이미지 가져옴
-      const imageUrl = await fetchBrandImage(brand.searchTerm)
+      const imageUrl = await fetchBrandImage(brand.searchTerm);
       if (imageUrl) {
-        localStorage.setItem(`${brand.id}-image`, imageUrl) // 이미지 저장
-        localStorage.setItem(`${brand.id}-fetchTime`, currentTime.toString()) // 시간 저장
+        localStorage.setItem(`${brand.id}-image`, imageUrl); // 이미지 저장
+        localStorage.setItem(`${brand.id}-fetchTime`, currentTime.toString()); // 시간 저장
 
         // 이미지 요소 설정
-        const brandElement = document.querySelector(`#${brand.id} .brand-image`)
+        const brandElement = document.querySelector(`#${brand.id} .brand-image`);
         if (brandElement) {
-          brandElement.src = imageUrl
+          brandElement.src = imageUrl;
         }
       }
     }
@@ -550,101 +543,100 @@ document.addEventListener('DOMContentLoaded', () => {
   async function fetchBrandImage(searchTerm) {
     const url = `https://pixabay.com/api/?key=${apiKey}&q=${encodeURIComponent(
       searchTerm
-    )}&image_type=photo&per_page=200&safesearch=true&category=fashion`
+    )}&image_type=photo&per_page=200&safesearch=true&category=fashion`;
 
     try {
-      const response = await fetch(url)
-      const data = await response.json()
+      const response = await fetch(url);
+      const data = await response.json();
       if (data.hits && data.hits.length > 0) {
         const unusedImages = data.hits.filter(
           (hit) => !usedImageUrls.has(hit.webformatURL)
-        )
+        );
 
         if (unusedImages.length > 0) {
-          const randomIndex = Math.floor(Math.random() * unusedImages.length)
-          const imageUrl = unusedImages[randomIndex].webformatURL
-          usedImageUrls.add(imageUrl)
-          return imageUrl
+          const randomIndex = Math.floor(Math.random() * unusedImages.length);
+          const imageUrl = unusedImages[randomIndex].webformatURL;
+          usedImageUrls.add(imageUrl);
+          return imageUrl;
         } else {
-          const randomIndex = Math.floor(Math.random() * data.hits.length)
-          const imageUrl = data.hits[randomIndex].webformatURL
-          usedImageUrls.add(imageUrl)
-          return imageUrl
+          const randomIndex = Math.floor(Math.random() * data.hits.length);
+          const imageUrl = data.hits[randomIndex].webformatURL;
+          usedImageUrls.add(imageUrl);
+          return imageUrl;
         }
       } else {
-        return 'default-image.jpg' // 기본 이미지 사용
+        return 'default-image.jpg'; // 기본 이미지 사용
       }
     } catch (error) {
-      console.error('Pixabay API Error:', error)
-      return 'default-image.jpg' // 에러 시 기본 이미지
+      console.error('Pixabay API Error:', error);
+      return 'default-image.jpg'; // 에러 시 기본 이미지
     }
   }
 
   // 페이지 콘텐츠 로드 함수
   async function loadPageContent(page) {
     try {
-      const response = await fetch(`${page}.html`)
-      if (!response.ok) throw new Error('페이지를 불러오는 데 실패했습니다.')
-      const html = await response.text()
-      contentArea.innerHTML = html
-      window.scrollTo(0, 0)
-      initializeHamburgerMenu()
-      loadBrandImages()
+      const response = await fetch(`${page}.html`);
+      if (!response.ok) throw new Error('페이지를 불러오는 데 실패했습니다.');
+      const html = await response.text();
+      contentArea.innerHTML = html;
+      window.scrollTo(0, 0);
+      initializeHamburgerMenu();
+      loadBrandImages();
     } catch (error) {
-      console.error('콘텐츠 로드 오류:', error)
-      contentArea.innerHTML = `<p>페이지를 불러오는 데 문제가 발생했습니다.</p>`
+      console.error('콘텐츠 로드 오류:', error);
+      contentArea.innerHTML = `<p>페이지를 불러오는 데 문제가 발생했습니다.</p>`;
     }
   }
 
   // 초기 실행
-  loadBrandImages()
+  loadBrandImages();
 
   // 모달 닫기 처리
-  closeButton?.addEventListener('click', closeModal)
+  closeButton?.addEventListener('click', closeModal);
 
   // 모달 외부 클릭 시 닫기 처리
   window.addEventListener('click', (event) => {
-    if (event.target === productModal) closeModal()
-  })
+    if (event.target === productModal) closeModal();
+  });
 
   // 모달 닫기 함수
   function closeModal() {
-    productModal.style.display = 'none'
+    productModal.style.display = 'none';
   }
 
   // 햄버거 메뉴 열기/닫기
-  hamburger.addEventListener('click', toggleMenu)
+  hamburger.addEventListener('click', toggleMenu);
 
   // 메뉴 항목 클릭 시 메뉴 닫기
   navLinks.forEach((link) => {
-    link.addEventListener('click', closeMenu)
-  })
+    link.addEventListener('click', closeMenu);
+  });
 
   // 메뉴 열기/닫기 함수
   function toggleMenu() {
-    hamburger.classList.toggle('active')
-    navbar.classList.toggle('active')
+    hamburger.classList.toggle('active');
+    navbar.classList.toggle('active');
   }
 
   // 메뉴 닫기 함수
   function closeMenu() {
-    hamburger.classList.remove('active')
-    navbar.classList.remove('active')
+    hamburger.classList.remove('active');
+    navbar.classList.remove('active');
   }
 
   // 페이지 로드 후 햄버거 메뉴 초기화 함수
   function initializeHamburgerMenu() {
-    const hamburger = document.querySelector('.hamburger')
-    const navbar = document.querySelector('.navbar')
-    const navLinks = document.querySelectorAll('.navbar a')
+    const hamburger = document.querySelector('.hamburger');
+    const navbar = document.querySelector('.navbar');
+    const navLinks = document.querySelectorAll('.navbar a');
 
-    hamburger.addEventListener('click', toggleMenu)
-
+    hamburger.addEventListener('click', toggleMenu);
     navLinks.forEach((link) => {
-      link.addEventListener('click', closeMenu)
-    })
+      link.addEventListener('click', closeMenu);
+    });
   }
 
   // 페이지 로드 후 햄버거 메뉴 초기화
-  initializeHamburgerMenu()
-})
+  initializeHamburgerMenu();
+});
