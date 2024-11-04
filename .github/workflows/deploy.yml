@@ -1,35 +1,35 @@
 # .github/workflows/deploy.yml
-name: Deploy Application
+name: Deploy Application  # 워크플로우 이름 설정
 
 on:
   push:
     branches:
-      - main
+      - main  # main 브랜치로 푸시할 때 워크플로우 실행
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # 최신 Ubuntu 환경에서 실행
 
     steps:
-      - name: Check out repository
+      - name: Check out repository  # 코드 체크아웃
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
+      - name: Set up Node.js  # Node.js 환경 설정
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '16'  # Node.js 버전 16 사용
 
       # `axios` 패키지 개별 설치
       - name: Install axios
-        run: npm install axios
+        run: npm install axios  # axios 패키지 설치
 
-      - name: Fetch images from Pixabay API
+      - name: Fetch images from Pixabay API  # Pixabay API에서 이미지 가져오기
         env:
-          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
-        run: node fetchImages.js
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}  # Pixabay API 키 환경 변수로 설정
+        run: node fetchImages.js  # fetchImages.js 실행하여 이미지 가져오기
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages  # GitHub Pages에 배포
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GH_PAT }}  # GH_PAT를 사용하도록 설정
-          publish_dir: ./data
+          github_token: ${{ secrets.GH_PAT }}  # GitHub Pages 배포에 필요한 Personal Access Token 사용
+          publish_dir: ./data  # ./data 디렉토리를 배포할 디렉토리로 설정
