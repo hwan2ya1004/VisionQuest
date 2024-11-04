@@ -5,6 +5,11 @@ const path = require('path');
 
 const apiKey = process.env.PIXABAY_API_KEY;
 
+if (!apiKey) {
+  console.error('Error: PIXABAY_API_KEY is not defined in environment variables');
+  process.exit(1); // 환경 변수가 없으면 종료
+}
+
 // 브랜드 목록
 const brands = [
   { id: 'gentlemonster', searchTerm: 'Gentle Monster glasses' },
