@@ -1,13 +1,13 @@
-# .github/workflows/fetch-images.yml
-name: Fetch Images and Deploy
+# .github/workflows/deploy.yml
+name: Deploy Application
 
 on:
   push:
     branches:
-      - main  # main 브랜치에 푸시될 때 실행
+      - main
 
 jobs:
-  fetch-images:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,14 +19,14 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install dependencies
-        run: npm install
+      # `axios` 패키지 개별 설치
+      - name: Install axios
+        run: npm install axios
 
-      - name: Fetch images from Pixabay
+      - name: Fetch images from Pixabay API
         env:
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
-        run: |
-          node fetchImages.js
+        run: node fetchImages.js
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
